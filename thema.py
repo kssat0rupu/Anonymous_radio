@@ -1,21 +1,18 @@
 # 匿名ラジオの動画タイトルを集めるプログラム
-# リンク : https://www.youtube.com/channel/UClSsb_e0HDQ-w7XuwNPgGqQ
+# リンク : https://www.youtube.com/channel/UClSsb_e0HDQ-w7XuwNPgGqQ/videos?view=0&sort=da&flow=grid
 # 集めた結果は"thema.csv"に保存する
-import requests
-from bs4 import BeautifulSoup
-import sys
 import csv
+import sys
 
-r = requests.get("https://www.youtube.com/channel/UClSsb_e0HDQ-w7XuwNPgGqQ/videos")
-q = requests.get("https://www.youtube.com/channel/UClSsb_e0HDQ-w7XuwNPgGqQ/videos?view=0&sort=da&flow=grid")
+from requests_html import HTMLSession
 
-#print(r.text)
-#print(q.text)
+url = 'https://www.youtube.com/channel/UClSsb_e0HDQ-w7XuwNPgGqQ/videos?view=0&sort=da&flow=grid'
 
-#soup = BeautifulSoup(r.content, "html.parser")
-soup_1 = BeautifulSoup(q.content, "html.parser")
+session = HTMLSession()
+r = session.get(url)
+r.html.render()
 
-real_page_tags = soup_1.find_all("h3")
+real_page_tags = r.html.find('h3')
 for tag in real_page_tags:
     print(tag.text)
 
@@ -25,11 +22,3 @@ with open('thema.csv', 'w') as f:
     for tag in real_page_tags:
         list.append(tag.text)
     writer.writerow(list)
-#sys.exit()
-'''
-real_page_tags = soup.find_all("h3")
-for tag in real_page_tags:
-    #print(tag.text)
-
-print(soup.find_all("h3", "yt-lockup"))
-'''
